@@ -31,7 +31,6 @@ public class HelicoptersService : IHelicopterService
 
     public async Task CreateAsync(Helicopter newHelicopter) =>
         await _helicoptersCollection.InsertOneAsync(newHelicopter);
-    
 
     public async Task<Helicopter?> UpdateAsync(string id, Helicopter updatedHelicopter) =>
         await _helicoptersCollection.FindOneAndReplaceAsync(e => e.Id == id, updatedHelicopter);
@@ -48,7 +47,7 @@ public class HelicoptersService : IHelicopterService
 
     public async Task<HelicopterManufacturer?> AggregateAsync(string id) =>
         await _helicoptersCollection.Aggregate()
-            .Match(e=>e.Id == id)
+            .Match(e => e.Id == id)
             .Lookup("manufacturers", "manufacturer", "name", @as: "manufacturerinfo")
             .As<HelicopterManufacturer>()
             .FirstOrDefaultAsync();

@@ -14,13 +14,14 @@ namespace HelicoptersService.Controllers;
 public class HelicoptersController : Controller
 {
     private readonly IHelicopterService _service;
+
     public HelicoptersController(IHelicopterService service)
     {
         _service = service;
     }
 
     [HttpPost]
-    [ProducesResponseType(200, Type = typeof(String))]  
+    [ProducesResponseType(200, Type = typeof(String))]
     [ProducesResponseType(404)]
     public IActionResult Create(CreateHelicopterRequest request)
     {
@@ -39,7 +40,7 @@ public class HelicoptersController : Controller
     }
 
     [HttpPost("{id}")]
-    [ProducesResponseType(200, Type = typeof(Helicopter))]  
+    [ProducesResponseType(200, Type = typeof(Helicopter))]
     public async Task<IActionResult> Read(string id)
     {
         Helicopter? result;
@@ -54,9 +55,9 @@ public class HelicoptersController : Controller
 
         return result == null ? NotFound($"Id {id} not found in storage") : Ok(result);
     }
-    
+
     [HttpPost]
-    [ProducesResponseType(200, Type = typeof(List<Helicopter>))]  
+    [ProducesResponseType(200, Type = typeof(List<Helicopter>))]
     public async Task<IActionResult> ReadList(ReadHelicoptersListRequest request)
     {
         List<Helicopter> result;
@@ -73,13 +74,15 @@ public class HelicoptersController : Controller
     }
 
     [HttpPost("{id}")]
-    [ProducesResponseType(200, Type = typeof(Helicopter))]  
+    [ProducesResponseType(200, Type = typeof(Helicopter))]
     public IActionResult Update(string id, UpdateHelicopterRequest updateHelicopter)
     {
         Helicopter? result = null;
         try
         {
-            result = _service.UpdateAsync(id, MapUtil<UpdateHelicopterRequest, Helicopter>.Map(updateHelicopter)).Result;
+            updateHelicopter.Id = id;
+            result = _service.UpdateAsync(id, MapUtil<UpdateHelicopterRequest, Helicopter>.Map(updateHelicopter))
+                .Result;
         }
         catch (Exception e)
         {
@@ -90,7 +93,7 @@ public class HelicoptersController : Controller
     }
 
     [HttpPost("{id}")]
-    [ProducesResponseType(200, Type = typeof(Helicopter))] 
+    [ProducesResponseType(200, Type = typeof(Helicopter))]
     public IActionResult Delete(string id)
     {
         Helicopter? result = null;
@@ -105,9 +108,9 @@ public class HelicoptersController : Controller
 
         return result == null ? NotFound($"Id {id} not found in storage") : Ok(result);
     }
-    
+
     [HttpPost("{id}")]
-    [ProducesResponseType(200, Type = typeof(Helicopter))] 
+    [ProducesResponseType(200, Type = typeof(Helicopter))]
     public IActionResult Recover(string id)
     {
         Helicopter? result = null;
@@ -122,9 +125,9 @@ public class HelicoptersController : Controller
 
         return result == null ? NotFound($"Id {id} not found in storage") : Ok(result);
     }
-    
+
     [HttpPost("{id}")]
-    [ProducesResponseType(200, Type = typeof(HelicopterManufacturer))] 
+    [ProducesResponseType(200, Type = typeof(HelicopterManufacturer))]
     public IActionResult Aggregation(string id)
     {
         HelicopterManufacturer? result = null;
@@ -139,5 +142,4 @@ public class HelicoptersController : Controller
 
         return result == null ? NotFound($"Id {id} not found in storage") : Ok(result);
     }
-
 }
